@@ -1,4 +1,8 @@
 = Document Header
+:icons: font
+:linkattrs:
+:imagesdir: images
+:data-uri:
 
 == Lists
 
@@ -45,3 +49,55 @@
 - nine
 
 ====
+
+
+
+== Links
+
+=== External
+
+https://asciidoctor.org[Asciidoctor]
+
+=== With spaces and special characters
+
+link:++https://example.org/?q=[a b]++[URL with special characters]
+
+=== Relative
+
+link:index.html[Docs]
+
+=== Link with attributes
+
+https://discuss.asciidoctor.org[Discuss Asciidoctor,role=external,window=_blank]
+
+=== Inline anchors
+
+[[bookmark-a]]Inline anchors make arbitrary content referenceable.
+
+=== Internal cross references
+
+See <<Links>> to learn how to write links.
+
+== Images
+
+=== Block
+
+image::sunset.jpg[Sunset,300,200]
+
+=== Inline
+
+Click image:sunset.jpg[Sunset,50,50,Play, title="Play"] to get the party started.
+
+=== Inline image with positioning role
+
+image:sunset.jpg[Sunset,150,150,role="right"] What a beautiful sunset!
+
+== Videos
+
+=== Block
+
+video::video_file.mp4[]
+
+
+
+
