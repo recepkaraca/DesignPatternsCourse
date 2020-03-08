@@ -1,0 +1,5 @@
+@startuml
+sea <|-- pool
+pool *-- bathub
+universe o-- solar_system
+@enduml

@@ -96,8 +96,63 @@ image:sunset.jpg[Sunset,150,150,role="right"] What a beautiful sunset!
 
 === Block
 
-video::video_file.mp4[]
+video::video_file.mp4[width=640]
 
+=== Embedded Youtube video
 
+video::LXb3EKWsInQ[youtube]
 
+== Source Code
 
+=== Code block with title and syntax highlighting
+
+.app.cpp
+[source,c++]
+----
+#include <iostream>
+using namespace std;
+
+int main() 
+{
+    cout << "Hello, World!";
+    return 0;
+}
+----
+
+=== Inline
+
+Reference code like `types` or `methods` inline.
+
+Do not pass arbitrary ``Object``s to methods that accept ``String``s!
+
+== Linux Bash Script Code
+
+```sh
+# print the contents of foo.txt to STDOUT
+$ cat foo.txt
+```
+
+== Table
+
+.Table Title
+[%header,cols=2*] 
+|===
+|Name of Column 1
+|Name of Column 2
+
+|Cell in column 1, row 1
+|Cell in column 2, row 1
+
+|Cell in column 1, row 2
+|Cell in column 2, row 2
+|===
+
+== UML
+
+=== CLASS
+
+image::../umls/class1/class1.png[Class1,300,200]
+
+=== USE CASE
+
+image::../umls/usecase1/usecase1.png[Class1,300,200]

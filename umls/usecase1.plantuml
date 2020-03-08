@@ -1,0 +1,6 @@
+@startuml
+Recep -> (Run)
+Recep --> (Use Case Run Faster)
+
+:Recep's Sister: ---> (Use Case Run Faster)
+@enduml
