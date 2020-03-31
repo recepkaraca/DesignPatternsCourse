@@ -1,0 +1,68 @@
+@startuml scenario_uml
+left to right direction
+
+class Account{
+    number
+    balance
+    deposit()
+    withdraw()
+}
+
+class Customer{
+    address
+    card_number
+    pin
+}
+
+interface Person{
+    firstName
+    lastName
+}
+
+class ATM{
+    location
+    managedby
+    withdraw()
+    deposit()
+    checkBalance()
+}
+
+class Bank{
+    code
+    address
+    getAccounts()
+}
+
+class CheckingAccount{
+    some extra functions for check account
+}
+
+class SavingAccount{
+    some extra functions for save account
+}
+
+class ATMTransaction{
+    transactionId
+    date
+    type
+    modifies()
+}
+
+class CustomerAuthentication{
+    customerId
+    token
+    auth()
+}
+
+Customer ..|> Person
+Account "1..*" --* "1" Customer
+Customer --> ATM
+ATM --o Bank
+Account --o Bank
+Account <|-- CheckingAccount
+Account <|-- SavingAccount
+Account "1" <--- "0..*" ATMTransaction
+ATMTransaction ...|> CustomerAuthentication : uses
+
+
+@enduml
