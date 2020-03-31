@@ -159,4 +159,4 @@ image::../umls/usecase1/usecase1.png[Class1,300,200]
 
 === Week 2 Homework
 
-image::../UML_Class_diagram/scenario_uml.png[Class1,800,200]
+image::../UML_Class_diagram/scenario_uml.png[Class1,800,500]
