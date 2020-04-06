@@ -148,5 +148,5 @@
 
 === UML Diagram
 
-image::Factory.png[Class1,500,300]
+image::Factory.png[Class1,700,400]
 

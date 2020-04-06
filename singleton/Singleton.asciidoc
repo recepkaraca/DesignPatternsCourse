@@ -48,5 +48,5 @@ class Singleton
 
 === UML Diagram
 
-image::Singleton.png[Class1,300,200]
+image::Singleton.png[Class1,300,400]
 
