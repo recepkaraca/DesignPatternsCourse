@@ -1,0 +1,58 @@
+@startuml scenario_uml
+skinparam classAttributeIconSize 0
+left to right direction
+
+class Book{
+    +BookCategory
+    +Page
+    +Author
+}
+
+class FantasticBook{
+    -_bookCategory
+    -_page
+    -_author
+    +BookCategory
+    +Page
+    +Author
+    +FantasticBook()
+}
+
+class ScienceFictionBook{
+    -_bookCategory
+    -_page
+    -_author
+    +BookCategory
+    +Page
+    +Author
+    +ScienceFictionBook()
+}
+
+class BookFactory{
+    +GetBook()
+}
+
+class FantasticFactory{
+    -_page
+    -_author
+    +FantasticFactory()
+    +GetBook()
+}
+
+class ScienceFictionFactory{
+    -_page
+    -_author
+    +ScienceFictionFactory()
+    +GetBook()
+}
+
+
+ScienceFictionBook --|> Book
+FantasticBook --|> Book
+ScienceFictionFactory --|> BookFactory
+FantasticFactory --|> BookFactory
+FantasticFactory ..> FantasticBook
+ScienceFictionFactory ..> ScienceFictionBook
+
+
+@enduml

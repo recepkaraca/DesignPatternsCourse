@@ -1,0 +1,52 @@
+== Singleton Pattern C# Source Code
+
+.Singleton.cs
+[source,c#]
+----
+class Singleton
+    {
+        static void Main(string[] args)
+        {
+            GameSun sun1 = GameSun.Instance;    <1>
+            GameSun sun2 = GameSun.Instance;    <1>
+            sun1.sunRadius = 3; 
+            sun2.sunRadius = 5; 
+            Console.WriteLine(sun1.sunRadius);  <2>
+        }
+    }
+
+    public sealed class GameSun
+    {
+        public int sunRadius { get; set; }
+
+        private GameSun()   <3>
+        {
+        }
+
+        private static readonly Lazy<GameSun> gameSun = new Lazy<GameSun>(() => new GameSun()); <4>
+
+        public static GameSun Instance  <5>
+        {
+            get
+            {
+                return gameSun.Value;
+            }
+        }
+
+        public void Rise()
+        {
+            Console.WriteLine("Sun raised") ;
+        }
+    }
+
+<1> Create an instance.
+<2> Look for change sun1's sunRadius value.
+<3> Private constructor.
+<4> Create thread safe sinleton instance with Lazy.
+<5> Return singleton instance.
+----
+
+=== UML Diagram
+
+image::Singleton.png[Class1,300,200]
+
