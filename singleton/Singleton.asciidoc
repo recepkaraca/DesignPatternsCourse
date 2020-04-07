@@ -1,5 +1,36 @@
 == Singleton Pattern C# Source Code
 
+.SingletonNotThreadSafe.cs
+[source,c#]
+----
+public sealed class Singleton
+{
+    private static Singleton instance = null;   <1>
+
+    private Singleton()
+    {
+    }
+
+    public static Singleton Instance
+    {
+        get
+        {
+            if (instance == null)   <2>
+            {
+                instance = new Singleton(); <3>
+            }
+            return instance;    <4>
+        }
+    }
+}
+
+<1> Create instance reference with static keyword.
+<2> If there is no other instance.
+<3> Create an instance.
+<4> Return created instance.  
+
+----
+
 .Singleton.cs
 [source,c#]
 ----
@@ -45,6 +76,7 @@ class Singleton
 <4> Create thread safe sinleton instance with Lazy.
 <5> Return singleton instance.
 ----
+
 
 === UML Diagram
 
