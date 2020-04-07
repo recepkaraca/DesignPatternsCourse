@@ -31,6 +31,10 @@ public sealed class Singleton
 
 ----
 
+=== UML Diagram
+
+image::SingletonNotThreadSafe.png[Class1,300,400]
+
 .Singleton.cs
 [source,c#]
 ----
