@@ -1,0 +1,16 @@
+@startuml scenario_uml
+skinparam classAttributeIconSize 0
+left to right direction
+
+class GameSun{
+    +sunRadius
+    {static} -gameSun : GameSun
+    {static} +Instance() : GameSun
+    +Rise()
+}
+
+
+GameSun <-- GameSun
+
+
+@enduml
