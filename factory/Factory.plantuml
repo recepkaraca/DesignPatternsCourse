@@ -2,7 +2,7 @@
 skinparam classAttributeIconSize 0
 left to right direction
 
-class Book{
+abstract class Book{
     +BookCategory
     +Page
     +Author
@@ -12,9 +12,6 @@ class FantasticBook{
     -_bookCategory
     -_page
     -_author
-    +BookCategory
-    +Page
-    +Author
     +FantasticBook()
 }
 
@@ -22,13 +19,10 @@ class ScienceFictionBook{
     -_bookCategory
     -_page
     -_author
-    +BookCategory
-    +Page
-    +Author
     +ScienceFictionBook()
 }
 
-class BookFactory{
+abstract class BookFactory{
     +GetBook()
 }
 
@@ -36,14 +30,12 @@ class FantasticFactory{
     -_page
     -_author
     +FantasticFactory()
-    +GetBook()
 }
 
 class ScienceFictionFactory{
     -_page
     -_author
     +ScienceFictionFactory()
-    +GetBook()
 }
 
 

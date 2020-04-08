@@ -4,7 +4,8 @@ left to right direction
 
 class Singleton{
     {static} -instance : Singleton
-    +Instance() : Singleton
+    -Singleton()
+    {static}+Instance() : Singleton
 }
 
 

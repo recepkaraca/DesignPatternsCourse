@@ -2,21 +2,25 @@
 
 namespace DesignPatternsCourse
 {
-    class Singleton
+    public class SingletonMainClass
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             GameSun sun1 = GameSun.Instance;
             GameSun sun2 = GameSun.Instance;
-            sun1.sunRadius = 3;
-            sun2.sunRadius = 5;
-            Console.WriteLine(sun1.sunRadius);
+
+            sun1.sunName = "sun1";
+            Thread thr1 = new Thread(new ThreadStart(sun1.Rise));
+            thr1.Start();
+            sun2.sunName = "sun2";
+            Thread thr2 = new Thread(new ThreadStart(sun2.Rise));
+            thr2.Start();
         }
     }
 
     public sealed class GameSun
     {
-        public int sunRadius { get; set; }
+        public string sunName { get; set; }
 
         private GameSun()
         {
@@ -34,7 +38,10 @@ namespace DesignPatternsCourse
 
         public void Rise()
         {
-            Console.WriteLine("Sun raised") ;
+            for(int i = 0; i < 100; i++)
+            {
+                Console.WriteLine(sunName + " raised!");
+            }
         }
     }
 }

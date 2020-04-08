@@ -44,23 +44,27 @@ class Singleton
         {
             GameSun sun1 = GameSun.Instance;    <1>
             GameSun sun2 = GameSun.Instance;    <1>
-            sun1.sunRadius = 3; 
-            sun2.sunRadius = 5; 
-            Console.WriteLine(sun1.sunRadius);  <2>
+
+            sun1.sunName = "sun1";
+            Thread thr1 = new Thread(new ThreadStart(sun1.Rise));   <2> 
+            thr1.Start();   <3>
+            sun2.sunName = "sun2";
+            Thread thr2 = new Thread(new ThreadStart(sun2.Rise));   <2>
+            thr2.Start();   <3>
         }
     }
 
     public sealed class GameSun
     {
-        public int sunRadius { get; set; }
+        public string sunName { get; set; }
 
-        private GameSun()   <3>
+        private GameSun()   <4>
         {
         }
 
-        private static readonly Lazy<GameSun> gameSun = new Lazy<GameSun>(() => new GameSun()); <4>
+        private static readonly Lazy<GameSun> gameSun = new Lazy<GameSun>(() => new GameSun()); <5>
 
-        public static GameSun Instance  <5>
+        public static GameSun Instance  <6>
         {
             get
             {
@@ -68,17 +72,22 @@ class Singleton
             }
         }
 
-        public void Rise()
+        public void Rise()  <7>
         {
-            Console.WriteLine("Sun raised") ;
+            for(int i = 0; i < 100; i++)
+            {
+                Console.WriteLine(sunName + " raised!");
+            }
         }
     }
 
 <1> Create an instance.
-<2> Look for change sun1's sunRadius value.
-<3> Private constructor.
-<4> Create thread safe sinleton instance with Lazy.
-<5> Return singleton instance.
+<2> Create a thread.
+<3> Start thread.
+<4> Private constructor.
+<5> Create thread safe sinleton instance with Lazy.
+<6> Return singleton instance.
+<7> Looking for thread's sunName value change.
 ----
 
 
