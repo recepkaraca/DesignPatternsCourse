@@ -1,0 +1,29 @@
+@startuml scenario_uml
+skinparam classAttributeIconSize 0
+left to right direction
+
+abstract class BookPrototype{
+    +int BookId
+    +string BookName
+    +string bookCategory
+    +BookPrototype()
+    {abstract}+BookProtype Clone()
+}
+
+class BookForDeep{
+    +BookForDeep()
+}
+
+class BookForShallow{
+    +BookForShallow()
+}
+
+class PrototypeRun{
+    +Main()
+}
+
+PrototypeRun --> BookPrototype
+BookForShallow -|> BookPrototype
+BookForDeep -|> BookPrototype
+
+@enduml

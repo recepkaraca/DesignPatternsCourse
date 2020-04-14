@@ -1,0 +1,30 @@
+@startuml scenario_uml
+skinparam classAttributeIconSize 0
+left to right direction
+
+class BookPool{
+    {static}-Lazy<BookPool> instance
+    {static}+string Instance
+    -int defaultSize
+    -ConcurrentBag<Book> _bag
+    -int _currentSize
+    -int _counter
+    -object _lockObject
+
+    -BookPool()
+    +Book AcquireObject()
+    +ReleaseObject()
+}
+
+abstract class Book{
+    {abstract}+string GatherBook()
+}
+
+class RequestBook{
+}
+
+Book -> BookPool
+RequestBook -o BookPool
+RequestBook -|> Book
+
+@enduml

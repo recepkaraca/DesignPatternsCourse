@@ -1,0 +1,87 @@
+== Factory Pattern C# Source Code
+
+.Prototype.cs
+[source,c#]
+----
+    class Prototype
+    {
+        public static void Main(string[] args)
+        {
+            BookForShallow book1 = new BookForShallow(1, "I Robot", "Science Fiction"); <1>
+            BookForShallow book2 = (BookForShallow)book1.Clone(); <2>
+            book2.BookId = 2;   <3>
+
+            Console.WriteLine("Book 1:");
+            Console.WriteLine("ID: " + book1.BookId + " Name: " + book1.BookName + " Category: " + book1.Category);
+
+            Console.WriteLine("Book 2:");
+            Console.WriteLine("ID: " + book2.BookId + " Name: " + book2.BookName + " Category: " + book2.Category);
+
+
+            BookForDeep book3 = new BookForDeep(1, "I Robot", "Science Fiction");   <1>
+            BookForDeep book4 = (BookForDeep)book3.Clone(); <2>
+            book4.BookId = 3;   <3>
+
+            Console.WriteLine("Book 3:");
+            Console.WriteLine("ID: " + book3.BookId + " Name: " + book3.BookName + " Category: " + book3.Category);
+
+            Console.WriteLine("Book 4:");
+            Console.WriteLine("ID: " + book4.BookId + " Name: " + book4.BookName + " Category: " + book4.Category);
+        }
+    }
+
+    abstract class BookPrototype
+    {
+        public int BookId;
+        public string BookName;
+        public string Category;
+
+        public BookPrototype(int bookId, string bookName, string category)
+        {
+            BookId = bookId;
+            BookName = bookName;
+            Category = category;
+        }
+
+        public abstract BookPrototype Clone();  <4>
+    }
+
+
+    class BookForDeep : BookPrototype
+    {
+        public BookForDeep(int bookId, string bookName, string category) : base(bookId, bookName, category)
+        {
+        }
+
+        public override BookPrototype Clone()
+        {
+            return (BookPrototype)this; <5>
+        }
+    }
+
+    class BookForShallow : BookPrototype
+    {
+        public BookForShallow(int bookId, string bookName, string category) : base(bookId, bookName, category)
+        {
+        }
+
+        // Deep Copy
+        public override BookPrototype Clone()   
+        {
+            return (BookPrototype)this.MemberwiseClone();   <6>
+        }
+    }
+
+
+<1> Create new instance.
+<2> Create cloned instance.
+<3> Change cloned instance's variable.
+<4> Abstract class' clone function.
+<5> Return of deep copy.
+<6> Return of shallow copy.
+----
+
+=== UML Diagram
+
+image::Prototype.png[Class1,400,500]
+
