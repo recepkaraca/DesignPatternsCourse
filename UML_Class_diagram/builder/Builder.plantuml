@@ -1,0 +1,49 @@
+@startuml scenario_uml
+skinparam classAttributeIconSize 0
+left to right direction
+
+class Shop{
+    +void Construct()
+}
+
+abstract class PhoneBuilder{
+    #Phone phone
+
+    +Phone Phone()
+    +void BuildProcessor()
+    +void BuildScreen()
+    +void BuildRam()
+    +void BuildMemory()
+}
+
+class AppleBuilder{
+    +AppleBuilder()
+}
+
+class SamsungBuilder{
+    +SamsungBuilder()
+}
+
+class XiaomiBuilder{
+    +XiaomiBuilder()
+}
+
+class Phone{
+    -string _brand
+    -Dictionary<string, string> _parts
+    +Phone()
+    +string this[]()
+    +void Show()
+}
+
+
+Shop "builder" o---> PhoneBuilder
+AppleBuilder --|> PhoneBuilder
+SamsungBuilder --|> PhoneBuilder
+XiaomiBuilder --|> PhoneBuilder
+AppleBuilder ...> Phone
+SamsungBuilder ...> Phone
+XiaomiBuilder ...> Phone
+
+
+@enduml
