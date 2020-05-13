@@ -1,0 +1,41 @@
+@startuml scenario_uml
+skinparam classAttributeIconSize 0
+left to right direction
+
+abstract class Iterator{
+    +Key()
+    +Current()
+    +MoveNext()
+    +Reset()
+}
+
+abstract class IteratorAggregate{
+    +IEnumerator GetEnumerator()
+}
+
+class CarIterator{
+    -CarCollection _collection
+    -int _position
+    -bool _reverse
+
+    +CarIterator()
+    +object Current()
+    +int Key()
+    +bool MoveNext()
+    +void Reset()
+}
+
+class CarCollection{
+    +ReverseDirection()
+    +List<string> getItems()
+    +void AddItem()
+    +IEnumerator GetEnumerator()
+}
+
+CarCollection ..> CarIterator : create
+CarCollection --o CarIterator
+CarIterator -|> Iterator
+CarCollection -|> IteratorAggregate
+IteratorAggregate ..> Iterator : create
+
+@enduml

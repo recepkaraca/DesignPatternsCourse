@@ -1,0 +1,135 @@
+== Factory Pattern C# Source Code
+
+.Observer.cs
+[source,c#]
+----
+    abstract class Car  (1)
+    {
+        private string _brand;
+        private double _price;
+        private List<IDealer> _dealers = new List<IDealer>();
+
+        public Car(string brand, double price)
+
+        {
+            this._brand = brand;
+            this._price = price;
+        }
+
+        public void Attach(IDealer dealer)  (2)
+        {
+            Console.WriteLine("Subject: Attached an observer.");
+            _dealers.Add(dealer);
+        }
+
+        public void Detach(IDealer dealer)  (3)
+
+        {
+            Console.WriteLine("Subject: Detached an observer.");
+            _dealers.Remove(dealer);
+        }
+        public void Notify()    (4)
+        {
+            Console.WriteLine("Subject: Notifying observers...");
+            foreach (IDealer dealer in _dealers)
+            {
+                dealer.Update(this);
+            }
+
+            Console.WriteLine("");
+        }
+
+        public double Price
+        {
+            get { return _price; }
+            set
+            {
+                if (_price != value)
+                {
+                    _price = value;
+                    Notify();
+                }
+            }
+        }
+
+        public string Brand
+        {
+            get { return _brand; }
+        }
+    }
+
+    class Mercedes : Car {  (5)
+        public Mercedes(string brand, double price) : base(brand, price)
+        { 
+        }
+    }
+
+    interface IDealer   (6)
+
+    {
+        void Update(Car car);
+    }
+
+    class Dealer : IDealer  (7)
+    {
+        private string _brand;
+        private Car _car;
+        public Dealer(string brand)
+        {
+            this._brand = brand;
+        }
+
+        public void Update(Car car) (8)
+        {
+            Console.WriteLine("Notified {0} of {1}'s " + "change to {2:C}", _car, car.Brand, car.Price);
+        }
+
+        public Car Car
+        {
+            get { return _car; }
+            set { _car = value; }
+        }
+    }
+
+    class Program
+    {
+
+        static void Main(string[] args)
+        {
+            var rnd = new Random();
+            Mercedes mercedes = new Mercedes("Mercedes", 200000);   (9)
+            Dealer dealer1 = new Dealer("Dealer1"); (10)
+            mercedes.Price = 200000;
+            Parallel.For(0, 5, (i, loopState) =>    (11)
+            {
+                int delay;
+                lock (rnd)
+                    delay = rnd.Next(1, 1001);
+                Thread.Sleep(delay);
+                Console.WriteLine("Thread : " + i);
+                mercedes.Attach(dealer1);
+                mercedes.Price += i;
+                mercedes.Detach(dealer1);
+            });
+
+        }
+    }
+
+
+<1> Subject class.
+<2> Attach observer.
+<3> Detach observer.
+<4> Notify if there is a change.
+<5> ConcreateSubject class.
+<6> Observer class.
+<7> ConcreateObserver class.
+<8> Notify if there is a change.
+<9> Create a concreate subject.
+<10> Create a concreate observer.
+<11> Run program in parallel for like thread.
+----
+
+=== UML Diagram
+
+image::Observer.png[Class1,300,500]
+
