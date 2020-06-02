@@ -8,7 +8,7 @@
 === Single Responsibility
 Her sınıfın tek bir görevi yerine getirmesini, ayrı iş parçacıklarının farklı sınıflara bölünmesi gerektiğini savunan prensiptir. Bir sınıfın yalnızca yeni bir özellik kazandırılacağı zaman değiştirilmesi gerektiğini belirtir. Projede bir değişiklik yapılacağı zaman, değişiklik yapılacak olan sınıfa nelerin bağlı olduğunu, hangi sınıfların etkileneceğini düşünmekten kurtulmamızı sağlar. Aşağıda, bu kurala uymayan bir kod parçacığı verilmiştir.
 
-image::SingleResponsibility/ornek1.png[Class1,400,300,align="center"]
+image::Images/SingleResponsibility.png[Class1,400,300,align="center"]
 
 Şekil üzerindeki koddan da görülebileceği üzere, görevi mail göndermek olan SendMail isimli sınıfa IsMailAddressValid isimli, mail adresinin uygun formatta olup olmadığını denetleyen bir sorumluluk yüklenmiştir. Bu durum single responsibility prensibine uymamaktadır.
 
@@ -16,16 +16,16 @@ image::SingleResponsibility/ornek1.png[Class1,400,300,align="center"]
 === Open / Closed Principle
 Open / Closed prensibi nesnelerin geliştirmeye açık fakat değişime kapalı olması gerektiğini savunan prensiptir. Nesnelerin davranışları değişmiyor olmalı fakat yeni özellik kazanabiliyor olmaları gerekmektedir. Sınıflar ve metotlar oluşturulurken ileride olabilecek istekler ve gelişmeleri öngörerek tasarlamak gerekmektedir. Bu geliştirmeler proje içerisindeki diğer sistemleri etkilememeli, değişikliğe sebep olmamalıdır. Aşağıda, bu kurala uymayan bir örnek verilmiştir.
 
-image::OpenClose/ornek1.png[Class1,500,300,align="center"]
-image::OpenClose/ornek2.png[Class1,500,300,align="center"]
+image::Images/OpenClosed1.png[Class1,500,300,align="center"]
+image::Images/OpenClosed2.png[Class1,500,300,align="center"]
 
 Örnekte, logları veri tabanında ve xml de tutan bir program verilmiştir. Bunlardan hangisinin seçileceğine log tipine göre karar vermektedir. Logger sınıfı içerisinde enum type'a göre işlem yapan bir Log fonksiyonu bulunmaktadır. Bu durumda eğer JSON formatında bir veri gelir ise, ilk olarak enum içerisine yeni bir type eklememiz gerekecek, ardından da Logger sınıfı içerisinde bu yeni enum için geliştirme yapılması gerekecektir. Bu durum open / closed prensibine uymamaktadır.
 
 === Liskov’s Substitution Principle
 Yerine geçme prensibi kalıtım alarak türeyen sınıfların kalıtım aldıkları nesnenin tüm özellikleri kullanmalı ve sonrasında kendi özelliklerini barındırmasını hedefleyen bir prensiptir eğer nesne kalıtım aldığı objenin tüm özelliklerini kullanmaz ise ortaya gereksiz kod yığınları oluşur ve sonrasında kalıtım alınan objenin diğerlerinden ayrılması için if else bloklarına ihtiyaç olur ve bu durum son derece verimsiz bir yazılıma sebep olur. Kodlarımızda herhangi bir değişiklik yapmaya gerek duymadan alt sınıfları, türedikleri(üst) sınıfların yerine kullanabilmemiz gerekir. Aşağıda, bu kurala uymayan bir örnek verilmiştir.
 
-image::Liskov/ornek1.png[Class1,300,300,align="center"]
-image::Liskov/ornek2.png[Class1,300,300,align="center"]
+image::Images/Liskov1.png[Class1,300,300,align="center"]
+image::Images/Liskov2.png[Class1,300,300,align="center"]
 
 Bir adet abstract BasePrinter sınıfı ve bunun içerisinde yine abstract Print ve Scan olmak üzere iki özellik için metod oluşturulmuştur. Abstract sınıfı kalıtan tüm sınıflar bu özellikleri sağlamak zorundadırlar. Fakat bu sınıftan kalıtılarak oluşturulan HP ve Canon sınıflarından HP sınıfı tarama özelliğini sağlamamaktadır ve bu özellik kullanıldığında hata döndürecektir. Bu durum Liskov’s Substitution prensibine uymamaktadır.
 
@@ -320,7 +320,7 @@ image::InterfaceSegregation/UML/InterfaceSegregation_UML.png[Class1,300,700,alig
 === Dependency Inversion Principle
 Sınıflar arası bağımlılıkların olabildiğinde az olmasını, özellikle üst seviye sınıfların alt seviye sınıflara bağımlı olmaması gerektiğini savunan prensiptir. Burada amaç üst seviyedeki modüllerin alt seviyelere bağımlı olmasından dolayı çıkabilecek sorunları ortadan kaldırmaktır. Yani alt seviyede yapılan herhangi bir değişikliğin üst seviyede kod değişikliğine veya onun bağlılıklarının etkilenmesine engel olmaktır amaç. Aşağıda, bu kurala uymayan bir örnek verilmiştir.
 
-image::DependencyInversion/ornek1.png[Class1,300,400,align="center"]
+image::Images/DependencyInversion.png[Class1,300,400,align="center"]
 
 Burada, Logger sınıfı içerisinde XmlLog sınıfına ait bir nesne üretilmiştir. Bu durum şu şekilde bir sıkıntı yaratmaktadır; artık Logger sınıfı XmlLog isimli sınıfı tanımaktadır, ilgili bilgilerine sahiptir ve ihtiyaç duyduğunu bilmektedir. İnsanlar Logger içerisinden de XmlLog ile ilgili verileri görebileceklerdir. Bunun yerine bir arayüz kullanılmış olsa idi, insanlar bu arayüz üzerinden erişim sağlayaklardı ve arkada neler döndüğü ile alakalı fikirleri olmayacaktı.
 
@@ -413,7 +413,7 @@ Memento Design Pattern, Behavioral tasarım kalıpları gurubunda olan bir tasar
     <7> Kaydı alınan müzik tekrardan çalınmaya başlanmıştır.
 ----
 
-Bu kodun çıktısı şu şekildedir:
+Aşağıda kodun çıktısı bulunmaktadır. Görülebileceği üzere müzik çalar uygulaması ile "Moves Like Jagger" isimli müziği dinlerken daha sonra "World Hold On" isimli müziğe geçiş yapılmış. Daha sonra Memento tasarım kalıbı ile bir önceki "Moves Like Jagger" isimli müziğe geri dönülmüştür.
 
 image::Memento/KodCiktisi.png[Class1,700,300,align="center"]
 
@@ -596,7 +596,7 @@ Adaptör Tasarım deseni, yapısal (structural) türünde olan bir tasarım dese
     <4> Adaptöre çevirmesi gereken işlemci modellerinin iletildiği sınıftır. (Client)
 ----
 
-Bu kodun çıktısı şu şekildedir:
+Aşağıda kodun çıktısı bulunmaktadır. Görülebileceği üzere işlemci modellerine göre bir veritabanı üzerinden gerekli veriler çekilmiş, daha sonra bu veriler html koduna dönüştürülerek web browser içerisinde gösterilebilecek şekle getirilmiştir. Bu iki işlem arasında adaptör tasarım örüntüsü kullanılmıştır, bu örüntü iki sistem arasında köprü görevi görmüştür.
 
 image::Adapter/KodCiktisi.png[Class1,400,1000,align="center"]
 

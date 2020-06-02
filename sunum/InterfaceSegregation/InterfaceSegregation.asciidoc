@@ -1,3 +1,5 @@
+= Ali Recep KARACA - 160202053
+
 == Interface Segregation Principle
 Temel amacı, arayüz implementation sonucunda oluşacak gereksiz kodları önlemek ve kodumuzun daha amaca yönelik hale gelmesini sağlamaktır. Bir arayüze gerektiğinden fazla özellik eklenmemesini, nesnelerin ihtiyaç duymadıkları fonksiyonların arayüzler içerisinden mümkün olduğunda ayrıştırılmasını savunur. Aşağıda bu duruma uymayan bir kod parçacığı verilmiştir.
 

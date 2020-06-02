@@ -1,142 +1,185 @@
-== Factory Pattern C# Source Code
+= Ali Recep KARACA - 160202053
 
-.Iterator.cs
+== Tasarım Örüntüleri
+=== Adapter
+Adaptör Tasarım deseni, yapısal (structural) türünde olan bir tasarım desenidir. Mevcut bir sınıfı veya arayüz sınıfını, eldeki farklı bir arayüz sınıfına uygun hale getirerek tekrar kullanmak amacıyla uygulanır. Çoğu zaman işe yarayacağını düşündüğümüz mevcut bir sınıfı kendi sistemimizde tekrar kullanmak isteriz. Fakat mevcut sınıf, tam beklediğimiz gibi olmayabilir. Bu durumda araya bir tane adaptör yazarak, mevcut sınıfı kendi sistemimize uygun hale getirebiliriz. Böylece adapte edilen nesnede kod değişikliği olmadan benzer bir arayüzü destekler hale getiririz. Ayrıca adaptasyon işlemi sırasında, adapte edilen nesnenin desteklemediği özellikler de adaptör tarafından gerçekleştirilebilir. Aşağıda, girilen işlemci modelinin bilgilerini alıp, dönen bilgileri adaptör aracılığı ile html kodu içerisinde döndüren bir kod parçacığı verilmiştir. Burada, bu tasarım kalıbının kullanılmasının amacı, istenilen işlemci modelinin bilgilerini döndüren sınıf ile, ekrana bu sınıfın döndürdüğü verileri html kodu içerisinde basacak bir ara sınıf kullanılması gerektiğinden dolayıdır. Adaptör tasarım örüntüsü, istenilen işlemci modeline ait verileri gidip gerekli yerden almakta ve html kodu haline getirerek aracılık görevi görmektedir.
+
+.Adapter.cs
 [source,c#]
 ----
-    abstract class Iterator : IEnumerator
+    class CPUs <1>
     {
-        object IEnumerator.Current => Current();
-
-        public abstract int Key();
-
-        public abstract object Current(); (1)
-
-        public abstract bool MoveNext(); (2)
-
-        public abstract void Reset(); (3)
-    }
-
-    abstract class IteratorAggregate : IEnumerable
-    {
-        public abstract IEnumerator GetEnumerator(); (4)
-    }
-
-    class CarIterator : Iterator
-    {
-        private CarCollection _collection; (5)
-
-        private int _position = -1;
-
-        private bool _reverse = false;
-
-        public CarIterator(CarCollection collection, bool reverse = false) (6)
+        public int getCoreCount(string cpu)
         {
-            this._collection = collection;
-            this._reverse = reverse;
-
-            if (reverse)
+            switch(cpu.ToLower())
             {
-                this._position = collection.getItems().Count;
+                case "intel i9 9900k":
+                case "intel i7 9700k":
+                case "amd ryzen7 3700x":
+                    return 8;
+                case "amd ryzen5 3600":
+                    return 6;
+                default:
+                    return 0;
             }
         }
 
-        public override object Current() (1)
+        public int getThreadCount(string cpu)
         {
-            return this._collection.getItems()[_position];
-        }
-
-        public override int Key()
-        {
-            return this._position;
-        }
-
-        public override bool MoveNext() (2)
-        {
-            int updatedPosition = this._position + (this._reverse ? -1 : 1);
-
-            if (updatedPosition >= 0 && updatedPosition < this._collection.getItems().Count)
+            switch (cpu.ToLower())
             {
-                this._position = updatedPosition;
-                return true;
-            }
-            else
-            {
-                return false;
+                case "intel i9 9900k":
+                case "amd ryzen7 3700x":
+                    return 16;
+                case "intel i7 9700k":
+                    return 8;
+                case "amd ryzen5 3600":
+                    return 12;
+                default:
+                    return 0;
             }
         }
 
-        public override void Reset() (3)
+        public double getBaseClockSpeed(string cpu) 
         {
-            this._position = this._reverse ? this._collection.getItems().Count - 1 : 0;
+            switch (cpu.ToLower())
+            {
+                case "intel i9 9900k":
+                case "intel i7 9700k":
+                case "amd ryzen7 3700x":
+                case "amd ryzen5 3600":
+                    return 3.6;
+                default:
+                    return 0;
+            }
+        }
+
+        public int getCacheSize(string cpu) 
+        {
+            switch (cpu.ToLower())
+            {
+                case "intel i9 9900k":
+                    return 16;
+                case "intel i7 9700k":
+                    return 12;
+                case "amd ryzen7 3700x":
+                    return 36;
+                case "amd ryzen5 3600":
+                    return 35;
+                default:
+                    return 0;
+            }
+        }
+
+        public int getReleaseYear(string cpu) 
+        {
+            switch (cpu.ToLower())
+            {
+                case "intel i9 9900k":
+                case "intel i7 9700k":
+                    return 2018;
+                case "amd ryzen7 3700x":
+                case "amd ryzen5 3600":
+                    return 2019;
+                default:
+                    return 0;
+            }
         }
     }
 
-    class CarCollection : IteratorAggregate
+    class CPU <2>
     {
-        List<string> _collection = new List<string>(); (7)
+        protected string CPUName;
+        protected int CoreCount;
+        protected int ThreadCount;
+        protected double BaseClockSpeed;
+        protected int CacheSize;
+        protected int ReleaseYear;
 
-        bool _direction = false;
-
-        public void ReverseDirection()
+        public CPU(string cpu)
         {
-            _direction = !_direction;
+            this.CPUName = cpu;
         }
 
-        public List<string> getItems()
+        public virtual void GetData()
         {
-            return _collection;
-        }
+            Console.WriteLine("CPU: {0} ------> ", CPUName);
 
-        public void AddItem(string item)
-        {
-            this._collection.Add(item);
-        }
-
-        public override IEnumerator GetEnumerator()
-        {
-            return new CarIterator(this, _direction);
         }
     }
 
-    class Program
+    class CPUInformations : CPU <3>
+    {
+        private CPUs _cpus;
+
+        public CPUInformations(string cpu) : base(cpu)
+        {
+        }
+
+        public override void GetData()
+        {
+            _cpus = new CPUs();
+
+            CoreCount = _cpus.getCoreCount(CPUName);
+            ThreadCount = _cpus.getThreadCount(CPUName);
+            BaseClockSpeed = _cpus.getBaseClockSpeed(CPUName);
+            CacheSize = _cpus.getCacheSize(CPUName);
+            ReleaseYear = _cpus.getReleaseYear(CPUName);
+
+            base.GetData();
+            Console.WriteLine("<!DOCTYPE html>");
+            Console.WriteLine("<html lang='en'>");
+            Console.WriteLine("\t<head>");
+            Console.WriteLine("\t\t<title>{0}</title>", CPUName);
+            Console.WriteLine("\t</head>");
+            Console.WriteLine("\t<body>");
+            Console.WriteLine("\t\t<div>");
+            Console.WriteLine("\t\t\tCore Count: " + CoreCount);
+            Console.WriteLine("\t\t\tThread Count: " + ThreadCount);
+            Console.WriteLine("\t\t\tCore Count: " + CoreCount);
+            Console.WriteLine("\t\t\tBase Clock Speed: " + BaseClockSpeed);
+            Console.WriteLine("\t\t\tCache Size: " + CacheSize);
+            Console.WriteLine("\t\t\tRelease Year: " + ReleaseYear);
+            Console.WriteLine("\t\t</div>");
+            Console.WriteLine("\t</body>");
+            Console.WriteLine("</html>\n");
+        }
+    }
+
+    class Client <4>
     {
         static void Main(string[] args)
         {
-            var collection = new CarCollection();   (8)
-            collection.AddItem("BMW");  (9)
-            collection.AddItem("Mercedes"); (9)
-            collection.AddItem("Audi"); (9)
+            Console.WriteLine("Without adapter:");
+            CPU cpu = new CPU("INTEL I9 9900K");
+            cpu.GetData();
+            Console.WriteLine();
 
-            foreach (var element in collection) (10)
-            {
-                Console.WriteLine(element);
-            }
+            Console.WriteLine("With adapter:");
+            CPUInformations intel9900k = new CPUInformations("INTEL I9 9900K");
+            intel9900k.GetData();
 
-            Console.WriteLine("\nReverse traversal:");
+            CPUInformations intel9700k = new CPUInformations("INTEL I7 9700K");
+            intel9700k.GetData();
 
-            collection.ReverseDirection();
+            CPUInformations amd3700x = new CPUInformations("AMD RYZEN7 3700X");
+            amd3700x.GetData();
 
-            foreach (var element in collection)
-            {
-                Console.WriteLine(element);
-            }
+            CPUInformations amd3600 = new CPUInformations("AMD RYZEN5 3600");
+            amd3600.GetData();
         }
     }
-
-
-<1> Get current object.
-<2> Move to next object.
-<3> Iterator reset.
-<4> Get numerator.
-<5> Get array which will be iterated.
-<6> CarIterator constructor.
-<7> Create array which will be iterated.
-<8> Create array in main.
-<9> Add item to array.
-<10> Iterate array.
+    
+    <1> Adapte edilecek olan verileri içeren sınıftır. Kendisine gönderilen işlemci modeline ait bilgileri döndürür. (Adaptee class)
+    <2> Adaptee sınıfından gelen verilerin çevrilmesi gereken formatın tanımlandığı sınıftır. (Target class)
+    <3> Adaptee class ile Target class arasında köprü görevi gören, bilgileri alıp istenildiği formata çeviren adaptör sınıfıdır. (Adapter class)
+    <4> Adaptöre çevirmesi gereken işlemci modellerinin iletildiği sınıftır. (Client)
 ----
 
-=== UML Diagram
+Aşağıda kodun çıktısı bulunmaktadır. Görülebileceği üzere işlemci modellerine göre bir veritabanı üzerinden gerekli veriler çekilmiş, daha sonra bu veriler html koduna dönüştürülerek web browser içerisinde gösterilebilecek şekle getirilmiştir. Bu iki işlem arasında adaptör tasarım örüntüsü kullanılmıştır, bu örüntü iki sistem arasında köprü görevi görmüştür.
 
-image::Iterator.png[Class1,500,300]
+image::KodCiktisi.png[Class1,400,1000,align="center"]
 
+Kodun UML Diagramı şu şekildedir:
+
+image::UML/Adapter_UML.png[Class1,400,500,align="center"]

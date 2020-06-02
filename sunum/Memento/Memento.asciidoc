@@ -1,142 +1,98 @@
-== Factory Pattern C# Source Code
+= Ali Recep KARACA - 160202053
 
-.Iterator.cs
+== Tasarım Örüntüleri
+=== Memento
+Memento Design Pattern, Behavioral tasarım kalıpları gurubunda olan bir tasarım desenidir. Elimizdeki mevcut nesnenin herhangi bir T anındaki durumunu kayda alarak, sonradan oluşabilecek değişiklikler üzerine tekrardan o kaydı elde etmemizi sağlayan bir desendir. İhtiyaç duyulduğu anda nesnelerin farklı halleri arasında geçiş yapılabilmesini mümkün kılar. Aşağıda bir müzik çalar uygulaması verilmiştir. Burada Memento tasarım örüntüsünün kullanılma amacı, müzis dinleme uygulamasında bir önceki veya kaydı alınan daha önceki parçalara geri dönüş imkanı sağladığı içindir. Kod aşağıdaki gibidir:
+
+.Memento.cs
 [source,c#]
 ----
-    abstract class Iterator : IEnumerator
+    class MusicPlayer <1>
     {
-        object IEnumerator.Current => Current();
+        public string MusicName { get; set; }
+        public int Duration { get; set; }
+        public string Artist { get; set; }
+        public int ReleaseYear { get; set; }
 
-        public abstract int Key();
-
-        public abstract object Current(); (1)
-
-        public abstract bool MoveNext(); (2)
-
-        public abstract void Reset(); (3)
-    }
-
-    abstract class IteratorAggregate : IEnumerable
-    {
-        public abstract IEnumerator GetEnumerator(); (4)
-    }
-
-    class CarIterator : Iterator
-    {
-        private CarCollection _collection; (5)
-
-        private int _position = -1;
-
-        private bool _reverse = false;
-
-        public CarIterator(CarCollection collection, bool reverse = false) (6)
+        public override string ToString()
         {
-            this._collection = collection;
-            this._reverse = reverse;
+            return $"You are currently listening\nMusic Name: {MusicName}\nDuration: {Duration} second\n" +
+                $"Artist: {Artist}\nRelease Year: {ReleaseYear}";
+        }
 
-            if (reverse)
+        public MusicPlayerMemento Save() <2>
+        {
+            return new MusicPlayerMemento
             {
-                this._position = collection.getItems().Count;
-            }
+                MusicName = this.MusicName,
+                Duration = this.Duration,
+                Artist = this.Artist,
+                ReleaseYear = this.ReleaseYear,
+            };
         }
 
-        public override object Current() (1)
+        public void PreviousMusic(MusicPlayerMemento memento) <3>
         {
-            return this._collection.getItems()[_position];
-        }
+            this.MusicName = memento.MusicName;
+            this.Duration = memento.Duration;
+            this.Artist = memento.Artist;
+            this.ReleaseYear = memento.ReleaseYear;
 
-        public override int Key()
-        {
-            return this._position;
-        }
-
-        public override bool MoveNext() (2)
-        {
-            int updatedPosition = this._position + (this._reverse ? -1 : 1);
-
-            if (updatedPosition >= 0 && updatedPosition < this._collection.getItems().Count)
-            {
-                this._position = updatedPosition;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public override void Reset() (3)
-        {
-            this._position = this._reverse ? this._collection.getItems().Count - 1 : 0;
+            Console.WriteLine("\nGoing back to previous music...\n");
         }
     }
 
-    class CarCollection : IteratorAggregate
+    class MusicPlayerMemento <4>
     {
-        List<string> _collection = new List<string>(); (7)
-
-        bool _direction = false;
-
-        public void ReverseDirection()
-        {
-            _direction = !_direction;
-        }
-
-        public List<string> getItems()
-        {
-            return _collection;
-        }
-
-        public void AddItem(string item)
-        {
-            this._collection.Add(item);
-        }
-
-        public override IEnumerator GetEnumerator()
-        {
-            return new CarIterator(this, _direction);
-        }
+        public string MusicName { get; set; }
+        public int Duration { get; set; }
+        public string Artist { get; set; }
+        public int ReleaseYear { get; set; }
     }
 
-    class Program
+    class MusicPlayerCareTaker <5>
+    {
+        public MusicPlayerMemento Memento { get; set; }
+    }
+
+    class MementoRun
     {
         static void Main(string[] args)
         {
-            var collection = new CarCollection();   (8)
-            collection.AddItem("BMW");  (9)
-            collection.AddItem("Mercedes"); (9)
-            collection.AddItem("Audi"); (9)
+            MusicPlayer musicPlayer = new MusicPlayer();
+            musicPlayer.MusicName = "Moves Like Jagger";
+            musicPlayer.Duration = 278;
+            musicPlayer.Artist = "Maroon 5";
+            musicPlayer.ReleaseYear = 2011;
+            Console.WriteLine(musicPlayer.ToString());
 
-            foreach (var element in collection) (10)
-            {
-                Console.WriteLine(element);
-            }
+            MusicPlayerCareTaker taker = new MusicPlayerCareTaker();
+            taker.Memento = musicPlayer.Save(); <6>
 
-            Console.WriteLine("\nReverse traversal:");
+            musicPlayer.MusicName = "World Hold On";
+            musicPlayer.Duration = 218;
+            musicPlayer.Artist = "Bob Sinclar";
+            musicPlayer.ReleaseYear = 2006;
+            Console.WriteLine("\n" + musicPlayer.ToString());
 
-            collection.ReverseDirection();
-
-            foreach (var element in collection)
-            {
-                Console.WriteLine(element);
-            }
+            musicPlayer.PreviousMusic(taker.Memento); <7>
+            Console.WriteLine(musicPlayer.ToString());
         }
     }
-
-
-<1> Get current object.
-<2> Move to next object.
-<3> Iterator reset.
-<4> Get numerator.
-<5> Get array which will be iterated.
-<6> CarIterator constructor.
-<7> Create array which will be iterated.
-<8> Create array in main.
-<9> Add item to array.
-<10> Iterate array.
+    
+    <1> Bu sınıf kopyası saklanacak olan nesneyi ifade etmektedir. Bu sınıf, kendi kopyasının oluşturulmasından sorumlu olduğu gibi geri yüklenmesinden de sorumludur.
+    <2> Kayıt alma işleminin gerçekleştirildiği fonksiyondur.
+    <3> Alınan kaydı geri yükleme işleminin gerçekleştirildiği fonksiyondur.
+    <4> Kopyalanacak nesnenin hangi özelliklerinin tutulacağı, bir başka deyişle hangi değerlerinin işleneceğini belirttiğimiz sınıftır.
+    <5> Bu sınıf Memento referansını barındırmakta ve yapılacak tüm işlemlerin organizasyonunu sağlamaktadır.
+    <6> Daha sonra dönülecek olan müziğin kaydı alınmıştır.
+    <7> Kaydı alınan müzik tekrardan çalınmaya başlanmıştır.
 ----
 
-=== UML Diagram
+Aşağıda kodun çıktısı bulunmaktadır. Görülebileceği üzere müzik çalar uygulaması ile "Moves Like Jagger" isimli müziği dinlerken daha sonra "World Hold On" isimli müziğe geçiş yapılmış. Daha sonra Memento tasarım kalıbı ile bir önceki "Moves Like Jagger" isimli müziğe geri dönülmüştür.
 
-image::Iterator.png[Class1,500,300]
+image::KodCiktisi.png[Class1,700,300,align="center"]
 
+Kodun UML Diagramı şu şekildedir:
+
+image::UML/Memento_UML.png[Class1,400,400,align="center"]
