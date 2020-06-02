@@ -1,0 +1,142 @@
+== Factory Pattern C# Source Code
+
+.Iterator.cs
+[source,c#]
+----
+    abstract class Iterator : IEnumerator
+    {
+        object IEnumerator.Current => Current();
+
+        public abstract int Key();
+
+        public abstract object Current(); (1)
+
+        public abstract bool MoveNext(); (2)
+
+        public abstract void Reset(); (3)
+    }
+
+    abstract class IteratorAggregate : IEnumerable
+    {
+        public abstract IEnumerator GetEnumerator(); (4)
+    }
+
+    class CarIterator : Iterator
+    {
+        private CarCollection _collection; (5)
+
+        private int _position = -1;
+
+        private bool _reverse = false;
+
+        public CarIterator(CarCollection collection, bool reverse = false) (6)
+        {
+            this._collection = collection;
+            this._reverse = reverse;
+
+            if (reverse)
+            {
+                this._position = collection.getItems().Count;
+            }
+        }
+
+        public override object Current() (1)
+        {
+            return this._collection.getItems()[_position];
+        }
+
+        public override int Key()
+        {
+            return this._position;
+        }
+
+        public override bool MoveNext() (2)
+        {
+            int updatedPosition = this._position + (this._reverse ? -1 : 1);
+
+            if (updatedPosition >= 0 && updatedPosition < this._collection.getItems().Count)
+            {
+                this._position = updatedPosition;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override void Reset() (3)
+        {
+            this._position = this._reverse ? this._collection.getItems().Count - 1 : 0;
+        }
+    }
+
+    class CarCollection : IteratorAggregate
+    {
+        List<string> _collection = new List<string>(); (7)
+
+        bool _direction = false;
+
+        public void ReverseDirection()
+        {
+            _direction = !_direction;
+        }
+
+        public List<string> getItems()
+        {
+            return _collection;
+        }
+
+        public void AddItem(string item)
+        {
+            this._collection.Add(item);
+        }
+
+        public override IEnumerator GetEnumerator()
+        {
+            return new CarIterator(this, _direction);
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var collection = new CarCollection();   (8)
+            collection.AddItem("BMW");  (9)
+            collection.AddItem("Mercedes"); (9)
+            collection.AddItem("Audi"); (9)
+
+            foreach (var element in collection) (10)
+            {
+                Console.WriteLine(element);
+            }
+
+            Console.WriteLine("\nReverse traversal:");
+
+            collection.ReverseDirection();
+
+            foreach (var element in collection)
+            {
+                Console.WriteLine(element);
+            }
+        }
+    }
+
+
+<1> Get current object.
+<2> Move to next object.
+<3> Iterator reset.
+<4> Get numerator.
+<5> Get array which will be iterated.
+<6> CarIterator constructor.
+<7> Create array which will be iterated.
+<8> Create array in main.
+<9> Add item to array.
+<10> Iterate array.
+----
+
+=== UML Diagram
+
+image::Iterator.png[Class1,500,300]
+

@@ -1,0 +1,60 @@
+@startuml scenario_uml
+skinparam classAttributeIconSize 0
+left to right direction
+
+interface IBasicRcController{
+    +void MoveForward()
+    +void MoveBack()
+    +void MoveRight()
+    +void MoveLeft()
+    +void StartEngine()
+    +void StopEngine()
+    +void SpeedUpEngine()
+    +void SpeedDownEngine()
+}
+
+interface IFlyableRcController{
+    +void MoveUp()
+    +void MoveDown()
+}
+
+interface IShipRcController{
+    +void LoadContainer()
+    +void DropContainer()
+}
+
+class Car {
+}
+class Ship{
+}
+class Drone{
+}
+
+class RcCarCommander{
+    +Car connectedCar
+
+    +RcCarCommander()
+}
+
+class RcDroneController{
+    +Drone connectedDrone
+
+    +RcDroneController()
+}
+
+class RcShipController{
+    +Ship connectedShip
+
+    +RcShipController()
+}
+
+RcShipController --> Ship
+RcShipController ..|> IShipRcController
+RcShipController ..|> IBasicRcController
+RcCarCommander --> Car
+RcCarCommander ..|> IBasicRcController
+RcDroneController --> Drone
+RcDroneController ..|> IBasicRcController
+RcDroneController ..|> IFlyableRcController
+
+@enduml

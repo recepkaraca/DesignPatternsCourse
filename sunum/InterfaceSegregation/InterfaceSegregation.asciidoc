@@ -1,0 +1,287 @@
+== Interface Segregation Principle
+Temel amacı, arayüz implementation sonucunda oluşacak gereksiz kodları önlemek ve kodumuzun daha amaca yönelik hale gelmesini sağlamaktır. Bir arayüze gerektiğinden fazla özellik eklenmemesini, nesnelerin ihtiyaç duymadıkları fonksiyonların arayüzler içerisinden mümkün olduğunda ayrıştırılmasını savunur. Aşağıda bu duruma uymayan bir kod parçacığı verilmiştir.
+
+.InterfaceSegregation.cs
+[source,c#]
+----
+    public interface IGenericRcCommander
+    {
+        void MoveForward();
+        void MoveBack();
+        void MoveRight();
+        void MoveLeft();
+        void MoveUp();
+        void MoveDown();
+        void StartEngine();
+        void StopEngine();
+        void SpeedUpEngine();
+        void SpeedDownEngine();
+        void LoadContainer();
+        void DropContainer();
+    }
+
+    class RcCarCommanderGeneric : IGenericRcCommander
+    {
+        public void MoveForward()
+        {
+            Console.WriteLine("Move forward signal sent to car.");
+        }
+
+        public void MoveBack()
+        {
+            Console.WriteLine("Move back signal sent to car.");
+        }
+
+        public void MoveRight()
+        {
+            Console.WriteLine("Move right signal sent to car.");
+        }
+
+        public void MoveLeft()
+        {
+            Console.WriteLine("Move left signal sent to car.");
+        }
+
+        public void StartEngine()
+        {
+            Console.WriteLine("Start engine signal sent to car.");
+        }
+
+        public void StopEngine()
+        {
+            Console.WriteLine("Stop engine signal sent to car.");
+        }
+
+        public void SpeedUpEngine()
+        {
+            Console.WriteLine("Speed up signal sent to car.");
+        }
+
+        public void SpeedDownEngine()
+        {
+            Console.WriteLine("Speed down signal sent to car.");
+        }
+
+        public void MoveUp() { }
+        public void MoveDown() { }
+        public void LoadContainer() { }
+        public void DropContainer() { }
+    }
+----
+
+Kod içerisinde, bir RC kumandası arayüzü yazılmıştır ve bu arayüzü kullanan bir RC Araba kumandası sınıfı oluşturulmuştur. Burada şu şekilde bir sıkıntı yaşanmıştır; RC kumandasının yazıldığı "IGenericRcCommander" arayüzü uçabilen RC araçlar için kullanılacak olan "MoveUp" ve "MoveDown" fonksiyonlarını içermekte ve yüzebilen RC araçlar için yük alma ve yük indirme sinyali gönderen "LoadContainer" ve "DropContainer" fonksiyonları içermektedir. Bundan dolayı, bu arayüzün kalıtılmış olduğu, sadece karada hareket edecek olan RC araçları kumanda edecek olan "RcCarCommanderGeneric" sınıfında içi doldurulmamış fonksiyonlar bulunmaktadır ve bu durum Interface Segregation prensibine uymamaktadır. Aşağıda, bu kodun Interface Segregation prensibine uygun olarak düzenlenmiş hali mevcuttur.
+
+.InterfaceSegregation.cs
+[source,c#]
+----
+    public interface IBasicRcController <1>
+    {
+        void MoveForward();
+        void MoveBack();
+        void MoveRight();
+        void MoveLeft();
+        void StartEngine();
+        void StopEngine();
+        void SpeedUpEngine();
+        void SpeedDownEngine();
+    }
+
+    public interface IFlyableRcController <2>
+    {
+        void MoveUp();
+        void MoveDown();
+    }
+
+    public interface IShipRcController <3>
+    {
+        void LoadContainer();
+        void DropContainer();
+    }
+
+    class Car { }
+    class Ship { }
+    class Drone { }
+
+    class RcCarCommander : IBasicRcController <4>
+    {
+        public Car connectedCar { get; set; }
+
+        public RcCarCommander()
+        {
+            Console.WriteLine("RC Car Controller Created.");
+        }
+
+        public void MoveForward()
+        {
+            Console.WriteLine("Move forward signal sent to car.");
+        }
+
+        public void MoveBack()
+        {
+            Console.WriteLine("Move back signal sent to car.");
+        }
+
+        public void MoveRight()
+        {
+            Console.WriteLine("Move right signal sent to car.");
+        }
+
+        public void MoveLeft()
+        {
+            Console.WriteLine("Move left signal sent to car.");
+        }
+
+        public void StartEngine()
+        {
+            Console.WriteLine("Start engine signal sent to car.");
+        }
+
+        public void StopEngine()
+        {
+            Console.WriteLine("Stop engine signal sent to car.");
+        }
+
+        public void SpeedUpEngine()
+        {
+            Console.WriteLine("Speed up signal sent to car.");
+        }
+
+        public void SpeedDownEngine()
+        {
+            Console.WriteLine("Speed down signal sent to car.");
+        }
+    }
+
+    class RcDroneController : IBasicRcController, IFlyableRcController <5>
+    {
+        public Drone connectedDrone { get; set; }
+
+        public RcDroneController()
+        {
+            Console.WriteLine("RC Drone Controller Created.");
+        }
+
+        public void MoveForward()
+        {
+            Console.WriteLine("Move forward signal sent to drone.");
+        }
+
+        public void MoveBack()
+        {
+            Console.WriteLine("Move back signal sent to drone.");
+        }
+
+        public void MoveRight()
+        {
+            Console.WriteLine("Move right signal sent to drone.");
+        }
+
+        public void MoveLeft()
+        {
+            Console.WriteLine("Move left signal sent to drone.");
+        }
+
+        public void StartEngine()
+        {
+            Console.WriteLine("Start engine signal sent to drone.");
+        }
+
+        public void StopEngine()
+        {
+            Console.WriteLine("Stop engine signal sent to drone.");
+        }
+
+        public void SpeedUpEngine()
+        {
+            Console.WriteLine("Speed up signal sent to drone.");
+        }
+
+        public void SpeedDownEngine()
+        {
+            Console.WriteLine("Speed down signal sent to drone.");
+        }
+
+        public void MoveUp()
+        {
+            Console.WriteLine("Move up signal sent to drone.");
+        }
+
+        public void MoveDown()
+        {
+            Console.WriteLine("Move down signal sent to drone.");
+        }
+    }
+
+    class RcShipController : IBasicRcController, IShipRcController <6>
+    {
+        public Ship connectedShip { get; set; }
+        public RcShipController()
+        {
+            Console.WriteLine("RC Ship Controller Created.");
+        }
+        public void MoveForward()
+        {
+            Console.WriteLine("Move forward signal sent to ship.");
+        }
+
+        public void MoveBack()
+        {
+            Console.WriteLine("Move back signal sent to ship.");
+        }
+
+        public void MoveRight()
+        {
+            Console.WriteLine("Move right signal sent to ship.");
+        }
+
+        public void MoveLeft()
+        {
+            Console.WriteLine("Move left signal sent to ship.");
+        }
+
+        public void StartEngine()
+        {
+            Console.WriteLine("Start engine signal sent to ship.");
+        }
+
+        public void StopEngine()
+        {
+            Console.WriteLine("Stop engine signal sent to ship.");
+        }
+
+        public void SpeedUpEngine()
+        {
+            Console.WriteLine("Speed up signal sent to ship.");
+        }
+
+        public void SpeedDownEngine()
+        {
+            Console.WriteLine("Speed down signal sent to ship.");
+        }
+
+        public void LoadContainer()
+        {
+            Console.WriteLine("Load container signal sent to ship.");
+        }
+
+        public void DropContainer()
+        {
+            Console.WriteLine("Drop container signal sent to ship.");
+        }
+    }
+    
+    <1> Temel kumanda işlevlerini yerine getiren bir arayüz oluşturulmuştur.
+    <2> Uçabilen RC araçların işlevlerini yerine getiren bir arayüz oluşturulmuştur.
+    <3> Yüzebilen RC araçların işlevlerini yerine getirebilen bir arayüz oluşturulmuştur.
+    <4> RC araba kumandası, araba uçmadığı ve yüzmediği için sadece temel kumanda fonksiyonlarını implemente etmiştir.
+    <5> Drone kumandası, temel kumanda ile uçan RC araçların fonksiyonlarını yerine getiren arayüzü birlikte implemente etmiştir.
+    <6> RC Gemi kumandası, temel kumanda ile yüzen RC araçlarının fonksiyonlarını yerine getiren arayüzü birikte implemente etmiştir.
+----
+
+Kod üzerinde görülebileceği üzere, karada hareket eden, uçabilen ve yüzen RC araç kumandaları için bu fonksiyonlar ayrı arayüzlere bölünmüş, bu arayüzü implemente eden kumanda sınıfları sadece kullanacakları fonksiyonları içeren arayüzleri implemente ederek kodun Interface Segregation prensibine uygun hale gelmesi sağlanmıştır. Kodun çıktısı şu şekildedir:
+
+image::KodCiktisi.png[Class1,700,300,align="center"]
+
+Kodun UML Diagramı aşağıda verilmiştir.
+
+image::UML/InterfaceSegregation_UML.png[Class1,300,700,align="center"]

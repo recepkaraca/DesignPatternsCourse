@@ -1,0 +1,30 @@
+@startuml scenario_uml
+skinparam classAttributeIconSize 0
+left to right direction
+
+class MusicPlayer{
+    +string MusicName
+    +int Duration
+    +string Artist
+    +int ReleaseYear
+
+    +override string ToString()
+    +MusicPlayerMemento Save()
+    +void PreviousMusic()
+}
+
+class MusicPlayerMemento{
+    +string MusicName
+    +int Duration
+    +string Artist
+    +int ReleaseYear
+}
+
+class MusicPlayerCareTaker{
+    +MusicPlayerMemento Memento
+}
+
+MusicPlayer ..> MusicPlayerMemento
+MusicPlayerCareTaker o--> MusicPlayerMemento
+
+@enduml

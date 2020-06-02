@@ -1,0 +1,40 @@
+@startuml scenario_uml
+left to right direction
+
+class CPUs{
+    +int getCoreCount()
+    +int getThreadCount()
+    +double getBaseClockSpeed()
+    +int getCacheSize()
+    +int getReleaseYear()
+}
+
+class CPU{
+    #string CPUName
+    #int CoreCount
+    #int ThreadCount
+    #double BaseClockSpeed
+    #int CacheSize
+    #int ReleaseYear
+
+    +CPU()
+    +virtual void GetData()
+}
+
+class CPUInformations{
+    -CPUs _cpus
+
+    +CPUInformations()
+    +override void GetData()
+}
+
+class Client{
+
+}
+
+CPUInformations --|> CPU
+CPUInformations --> CPUs
+Client -> CPU
+
+
+@enduml
